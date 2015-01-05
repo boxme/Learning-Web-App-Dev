@@ -15,3 +15,27 @@ p {
 	border: 1px solid gray;
 	padding: 10px;
 }
+
+/* We can add a class to any DOM element */
+a.first_link {
+	color: cornflowerblue;
+	text-decoration: none; /* Remove the default underline */
+}
+
+/* Example of pseudoclass */
+a.first_link:visited {
+	color: tomato;
+}
+
+a.second_link {
+	color: tomato;
+	text-decoration: none; /* Remove the default underline */
+}
+
+a.second_link:hover {
+	text-decoration: underline;
+}
+
+a.second_link:visited {
+	color: cornflowerblue;
+}
