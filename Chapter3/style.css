@@ -1,0 +1,17 @@
+/* Here we are styling the body */
+body {
+	background: lightcyan; /* Set the background to a light bluish color */
+	width: 800px;		   /* Set the body width to 800 pixels */
+	margin: auto;		   /* Set the margin to auto to align the text to the center */
+}
+
+h1 {
+	color: maroon;
+	text-align: center;
+}
+
+p {
+	color: gray;
+	border: 1px solid gray;
+	padding: 10px;
+}
