@@ -1,0 +1,19 @@
+ol {
+	border: 5px solid darksalmon;
+	border-radius: 10px;
+}
+
+/* Select only the li elements that are descendents of the content div element */
+div.content li {
+	color: brown;
+}
+
+/* Select only the first li element in both lists */
+div.content li:first-child {
+	background: yellow;
+}
+
+/* Select the elements by using the nth-child pseudoclass */
+div.content li:nth-child(2) {
+	background: orange;
+}
