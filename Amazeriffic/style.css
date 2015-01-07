@@ -1,0 +1,22 @@
+body {
+	/* Sets the base font size tp 100% of the user's font size for his browser */
+	font-size: 100%; /* this sets the base font size for everything */
+}
+
+h1 {
+	/* use Denk One font if available, if not sans-serif */
+	font-family: 'Denk One', sans-serif; /* using the font in h1 */
+	font-size: xx-large; /* sets it relative to the base font size */
+}
+
+h2 {
+	font-size: x-large;
+}
+
+p.important {
+	font-size: larger; /* makes it a little larger than the parent */
+}
+
+p.onePointTwo {
+	font-size: 1.2em; /* sets it to 1.2 times the base size */
+}
