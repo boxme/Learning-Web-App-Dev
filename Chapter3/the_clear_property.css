@@ -1,0 +1,22 @@
+/* The star symbol will target every single element on the page. 
+Many developers will use this trick to zero out the margins and padding. 
+While this is certainly fine for quick tests, I'd advise you to never use this in production code. 
+It adds too much weight on the browser, and is unnecessary. */
+* {
+	margin: 0;
+	padding: 0;
+}
+
+nav {
+	float: left;
+	background: darkgray;
+}
+
+main {
+	background: lightgray;
+}
+
+footer {
+	background: gray;
+	clear: both; /* or we can just use 'clear: left' in this case */
+}

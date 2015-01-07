@@ -1,0 +1,24 @@
+main {
+	width: 500px;
+	margin: auto;
+	background: gray;
+	overflow: auto;
+}
+
+nav {
+	width: 100px;
+	float: right;
+}
+
+/* Remove defaults on the p elements inside the nav */
+nav p {
+	margin: 0;
+	padding: 0;
+}
+
+p {
+	margin: 0;	/* zero out the default margin */
+	padding: 10px;
+	float: left;
+	width: 380px; /* 400 - 2*10 = 380 */
+}
