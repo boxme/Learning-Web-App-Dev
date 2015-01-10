@@ -1,6 +1,7 @@
 body {
 	/* Sets the base font size tp 100% of the user's font size for his browser */
 	font-size: 100%; /* this sets the base font size for everything */
+	background: #f9e933;
 }
 
 h1 {
@@ -19,4 +20,17 @@ p.important {
 
 p.onePointTwo {
 	font-size: 1.2em; /* sets it to 1.2 times the base size */
+}
+
+/* header, main, and footer to have fixed width property */
+header, main, footer {
+	min-width: 855px; /* if the viewport is smaller than 855px, part of the page is hidden */
+}
+
+header {
+	background: white;
+}
+
+main {
+	background: white;
 }
