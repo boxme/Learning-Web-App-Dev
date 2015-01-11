@@ -2,16 +2,30 @@ body {
 	/* Sets the base font size tp 100% of the user's font size for his browser */
 	font-size: 100%; /* this sets the base font size for everything */
 	background: #f9e933;
+	font-family: 'Droid Sans', sans-serif;
 }
 
 h1 {
-	/* use Denk One font if available, if not sans-serif */
-	font-family: 'Denk One', sans-serif; /* using the font in h1 */
+	/* use Ubuntu font if available, if not sans-serif */
+	font-family: 'Ubuntu', sans-serif; /* using the font in h1 */
 	font-size: xx-large; /* sets it relative to the base font size */
 }
 
 h2 {
+	font-family: 'Ubuntu', sans-serif;
 	font-size: x-large;
+}
+
+h3 {
+	font-family: 'Ubuntu', sans-serif;
+}
+
+h4 {
+	font-family: 'Ubuntu', sans-serif;
+}
+
+h5 {
+	font-family: 'Ubuntu', sans-serif;
 }
 
 p.important {
@@ -27,10 +41,40 @@ header, main, footer {
 	min-width: 855px; /* if the viewport is smaller than 855px, part of the page is hidden */
 }
 
-header {
-	background: white;
-}
-
 main {
 	background: white;
+	overflow: auto;
+}
+
+header {
+	background: white;
+	overflow: auto;	 /* when all the children are floating, then set this so that this parent won't shrink to 0 height */
+}
+
+footer {
+	overflow: auto;
+}
+
+header .container, main .container, footer .container {
+	max-width: 855px;
+	margin: auto;
+}
+
+header h1, main .left_container, footer .contact {
+	float: left;
+	width: 570px;
+}
+
+header nav, main .right_container, footer .sitemap {
+	float: right;
+	width: 285px;
+}
+
+a {
+	text-decoration: none;
+	color: tomato;
+}
+
+a:hover {
+	text-decoration: underline;
 }
