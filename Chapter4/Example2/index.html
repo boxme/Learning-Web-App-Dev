@@ -1,13 +1,50 @@
 <!doctype html>
 <html>
 	<head>
-		<title>App Name</title>
+		<title>A Simple App</title>
 		<link rel="stylesheet" type="text/css" href="style.css">
 	</head>
 
 	<body>
-		<h1>App Name</h1>
-		<p>App Description</p>
+		<header>
+			<div class="container">
+				<div class="left-container">
+					<h1>Comments</h1>	
+				</div>
+				<div class="right-container">
+					<p>A simple app that allows a user to input comments</p>				
+				</div>
+			</div>
+		</header>
+
+		<main>
+			<div class="container">			
+				<div class="left-container">
+					<section class="comment-input">
+						<p>Add Your Comment:</p>
+						<input type="text">
+						<button>+</button>
+					</section>
+				</div>
+
+				<div class="right-container">
+					<section class="comments">
+						<p>This is the first comment!</p>
+						<p>Here's the second one!</p>
+						<p>And this is one more.</p>
+						<p>Here is another one!</p>
+					</section>
+				</div>
+			</div>
+		</main>
+
+		<footer>
+			<div class="container">
+				<div class="left-container">
+					<p>this work is released into the public domain</p>
+				</div>
+			</div>
+		</footer>
 
 		<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
 		<script src="app.js"></script>
