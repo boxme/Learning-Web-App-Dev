@@ -30,7 +30,7 @@ header p {
 
 main {
 	overflow: auto;
-	padding: 30px 0;	/* Margin top, right, bottom, left. Default is 0px */
+	padding: 30px 0;	/* Margin top, right, bottom, left. When top is declared but bottom is not, then bottom follows top. Same for left & right */
 	border-bottom: 1px solid darkslategray;
 }
 
