@@ -58,7 +58,8 @@ footer {
 header .container, main .container, footer .container {
 	max-width: 855px;
 	margin: auto;
-	padding: 20px;
+	padding-top: 20px;
+	padding-bottom: 20px;
 }
 
 header h1, main .left_container, footer .contact {
