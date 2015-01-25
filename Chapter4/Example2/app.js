@@ -1,7 +1,8 @@
 var main = function() {
 	"use-strict";
 
-	$(".comment-input button").on("click", function(event) {
+	// Declare the function
+	var addCommentFromInputBox = function() {
 		var comment_text = $(".comment-input input").val();
 
 		// Ensure that comment_text is not empty
@@ -23,6 +24,10 @@ var main = function() {
 			// it will be filled with that value
 			$(".comment-input input").val("");
 		}
+	};
+
+	$(".comment-input button").on("click", function(event) {
+		addCommentFromInputBox();
 	});
 
 	$(".comment-input input").on("keypress", function(event) {
