@@ -35,7 +35,6 @@ var main = function() {
                 	$content.prepend($("<li>").text(todo));
             	});
 
-				$("main .content").append($content);
 			} else if ($element.parent().is(":nth-child(2)")) {				
 				$content = $("<ul>");
 
@@ -43,10 +42,25 @@ var main = function() {
                 	$content.append($("<li>").text(todo));
             	});
 
-				$("main .content").append($content);
 			} else if ($element.parent().is(":nth-child(3)")) {
-				console.log("Third tab clicked");
+				var $button = $("<button>").text("+");
+				var $input = $("<input>");
+
+				$button.on("click", function() {
+					var newToDo = $input.val();
+					console.log(newToDo);
+					if (newToDo !== "") {
+						toDos.push(newToDo);
+						$input.val("");
+					}
+				});
+
+				$content = $("<div>").append($input).append($button);
+				/* Alternatively append() allows multiple arguments so the above
+                can be done with $content = $("<div>").append($input, $button); */
 			}
+
+			$("main .content").append($content);
 
 			// return false so the browser don't follow the link
 			return false;
