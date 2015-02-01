@@ -1,19 +1,14 @@
-var main = function() {
-	"use-strict";
+var main = function (toDoObjectss) {
+	"use strict";
 
-	var toDos = [
-		"Finish writing this book", 
-		"Take Gracie to the park", 
-		"Answer emails",
-		"Prep for Monday's class",
-		"Make up some new ToDos",
-		"Get Groceries"
-	];
+	var toDos = toDoObjectss.map(function (task) {
+		return task.description;
+	});
 
 	// jQuery allows us to select a set of elements and then iterate over it as an array
 	$(".tabs a span").toArray().forEach(function (element) {
 		// Create a click handler for this element
-		$(element).on("click", function() {
+		$(element).on("click", function () {
 			// since we're using the jQuery version of element,
 			// we'll go ahead and create a temporary variable
 			// so we don't need to keep recreating it
@@ -29,6 +24,7 @@ var main = function() {
 			$("main .content").empty();
 
 			if ($element.parent().is(":nth-child(1)")) {
+				// Newest
 				$content = $("<ul>");
 
 				toDos.forEach(function (todo) {
@@ -36,6 +32,7 @@ var main = function() {
             	});
 
 			} else if ($element.parent().is(":nth-child(2)")) {				
+				// Oldest
 				$content = $("<ul>");
 
 				toDos.forEach(function (todo) {
@@ -43,10 +40,52 @@ var main = function() {
             	});
 
 			} else if ($element.parent().is(":nth-child(3)")) {
+				// Tags
+				var organizedByTag = [
+					{
+						"name" : "shopping",
+						"toDos" : ["Get groceries"]
+					},
+					{
+						"name" : "chores",
+						"toDos" : ["Get groceries", "Take Gracies to the park"]
+					}, 
+					{
+						"name" : "writing",
+						"toDos" : ["Make up some new ToDos", "Finish writing this book"]
+					},
+					{
+						"name" : "work",
+						"toDos" : ["Make up some new ToDos", "Prep for Monday's class", "Answer emails", "Finish writing this book"]
+					}, 
+					{
+						"name" : "teaching",
+						"toDos" : ["Prep for Monday's class"]
+					}, 
+					{
+						"name" : "pets",
+						"toDos" : ["Take Gracie to the park"]
+					}
+				];
+				organizedByTag.forEach(function (tag) {
+					var $tagName = $("<h3>").text(tag.name);
+					var $content = $("<ul>");
+
+					tag.toDos.forEach(function (desciption) {
+						var $li = $("<li>").text(desciption);
+						$content.append($li);
+					});
+
+					$("main .content").append($tagName);
+					$("main .content").append($content);
+				});
+
+			} else if ($element.parent().is(":nth-child(4)")) {
+				// Add
 				var $button = $("<button>").text("+");
 				var $input = $("<input>");
 
-				$button.on("click", function() {
+				$button.on("click", function () {
 					var newToDo = $input.val();
 					console.log(newToDo);
 					if (newToDo !== "") {
@@ -70,4 +109,38 @@ var main = function() {
 	$(".tabs a:first-child span").trigger("click");
 };
 
-$(document).ready(main);
+$(document).ready(function () {
+	var toDoObjects = [
+		{
+			"description" : "Get groceries",
+			"tags" : ["shopping", "chores"]
+		},
+		{
+			"description" : "Make up some new ToDos",
+			"tags" : ["writing", "work"]
+		},
+		{
+			"description" : "Prep for Monday's class",
+			"tags" : ["work", "teaching"]
+		},
+		{
+			"description" : "Answer emails",
+			"tags" : ["work"]
+		},
+		{
+			"description" : "Take Gracie to the park",
+			"tags" : ["chores", "pets"]
+		},
+		{
+			"description" : "Finish writing this book",
+			"tags" : ["writing", "work"]
+		}
+	];
+
+	main(toDoObjects);
+	
+	// Need to be able to read local files from the webpage to do the below
+	// $.getJSON("todo.json", function (toDoObjects) {
+	// 	main(toDoObjects);
+	// });
+});
