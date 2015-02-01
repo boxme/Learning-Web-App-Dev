@@ -1,9 +1,7 @@
 var main = function (toDoObjectss) {
 	"use strict";
 
-	var toDos = toDoObjectss.map(function (task) {
-		return task.description;
-	});
+	var toDos = createToDoListFromObjects(toDoObjectss);
 
 	// jQuery allows us to select a set of elements and then iterate over it as an array
 	$(".tabs a span").toArray().forEach(function (element) {
@@ -58,19 +56,32 @@ var main = function (toDoObjectss) {
 
 			} else if ($element.parent().is(":nth-child(4)")) {
 				// Add
+				var $inputLabel = $("<p>").text("Description: ");
+				var $input = $("<input>").addClass("description");
+
+				var $tagLabel = $("<p>").text("Tags: ");
+				var $tagInput = $("<input>").addClass("tags");
+
 				var $button = $("<button>").text("+");
-				var $input = $("<input>");
 
 				$button.on("click", function () {
 					var newToDo = $input.val();
-					console.log(newToDo);
-					if (newToDo !== "") {
-						toDos.push(newToDo);
+					var tags = $tagInput.val();
+
+					if (newToDo !== "" && tags !== "") {
+						var tagsArray = tags.split(",");
+						toDoObjectss.push({ "description" : newToDo, "tags" : tagsArray });
+
+						// Update toDos
+						toDos = createToDoListFromObjects(toDoObjectss);
+
 						$input.val("");
+						$tagInput.val("");
 					}
 				});
 
-				$content = $("<div>").append($input).append($button);
+				$content = $("<div>").append($inputLabel)
+				.append($input).append($tagLabel).append($tagInput).append($button);
 				/* Alternatively append() allows multiple arguments so the above
                 can be done with $content = $("<div>").append($input, $button); */
 			}
@@ -120,6 +131,12 @@ $(document).ready(function () {
 	// 	main(toDoObjects);
 	// });
 });
+
+var createToDoListFromObjects = function (toDoObjectss) {
+	return toDoObjectss.map(function (task) {
+		return task.description;
+	});
+};
 
 var organizedTaskByTagMySoln = function (toDoObjects) {
 	var tagsArray = [];
@@ -178,7 +195,7 @@ var organizedByTagBookSoln = function (toDoObjects) {
 
     // The map() method creates a new array with the results 
     // of calling a provided function on every element in this array.
-	var tagOjects = uniqueTagsArray.map(function (tag) {
+	var tagObjects = uniqueTagsArray.map(function (tag) {
 		// Find all the to-do objects that contain the tag
 		var toDosWithTag = [];
 		toDoObjects.forEach(function (toDo) {
@@ -191,5 +208,5 @@ var organizedByTagBookSoln = function (toDoObjects) {
 		return { "name" : tag, "toDos" : toDosWithTag };
 	});
 
-	return tagOjects;
+	return tagObjects;
 };
