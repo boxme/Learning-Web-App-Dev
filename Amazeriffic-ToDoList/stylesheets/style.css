@@ -74,6 +74,13 @@ main .content li {
 	margin: 0 0 10px 0;
 }
 
+main .content h3 {
+	border-radius: 5px;
+	padding: 5px;
+	background: #ddd;
+	margin: 0 0 10px 0;
+}
+
 /* Footer headings */
 h5 {
 	font-family: 'Ubuntu', sans-serif;

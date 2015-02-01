@@ -41,32 +41,8 @@ var main = function (toDoObjectss) {
 
 			} else if ($element.parent().is(":nth-child(3)")) {
 				// Tags
-				var organizedByTag = [
-					{
-						"name" : "shopping",
-						"toDos" : ["Get groceries"]
-					},
-					{
-						"name" : "chores",
-						"toDos" : ["Get groceries", "Take Gracies to the park"]
-					}, 
-					{
-						"name" : "writing",
-						"toDos" : ["Make up some new ToDos", "Finish writing this book"]
-					},
-					{
-						"name" : "work",
-						"toDos" : ["Make up some new ToDos", "Prep for Monday's class", "Answer emails", "Finish writing this book"]
-					}, 
-					{
-						"name" : "teaching",
-						"toDos" : ["Prep for Monday's class"]
-					}, 
-					{
-						"name" : "pets",
-						"toDos" : ["Take Gracie to the park"]
-					}
-				];
+				var organizedByTag = organizedByTagBookSoln(toDoObjectss);
+
 				organizedByTag.forEach(function (tag) {
 					var $tagName = $("<h3>").text(tag.name);
 					var $content = $("<ul>");
@@ -144,3 +120,76 @@ $(document).ready(function () {
 	// 	main(toDoObjects);
 	// });
 });
+
+var organizedTaskByTagMySoln = function (toDoObjects) {
+	var tagsArray = [];
+	var descriptionToTagsArray = [];
+	toDoObjects.forEach(function (toDo) {
+		var description = toDo.description;
+
+		toDo.tags.forEach(function (tag) {
+			var descriptionToTag = new Object();
+			descriptionToTag.description = description;
+			descriptionToTag.tag = tag;
+
+			tagsArray.push(tag);
+			descriptionToTagsArray.push(descriptionToTag);
+		});
+	});
+
+	// filter() method creates a new array with all elements 
+	// that pass the test implemented by the provided function.
+	var uniqueTagsArray = tagsArray.filter(function (tag, position) {
+		// The indexOf() method returns the first index at which 
+		// a given element can be found in the array, or -1 if it is not present.
+		return tagsArray.indexOf(tag) == position;
+	});
+
+	var organizedByTagArray = [];
+
+	uniqueTagsArray.forEach(function (tag) {
+		 var tagToDesciption = new Object();
+		 tagToDesciption.name = tag;
+		 tagToDesciption.toDos = [];
+		 descriptionToTagsArray.forEach(function (task) {
+		 	if (tag == task.tag) {
+		 		tagToDesciption.toDos.push(task.description);
+		 	}
+		 });
+
+		 organizedByTagArray.push(tagToDesciption);
+	});
+
+	return organizedByTagArray;
+};
+
+var organizedByTagBookSoln = function (toDoObjects) {
+	var uniqueTagsArray = [];
+	toDoObjects.forEach(function (toDo) {
+
+		// Iterate over each tag in this toDo
+		toDo.tags.forEach(function (tag) {
+			// Make sure the tag is not already in
+			if (uniqueTagsArray.indexOf(tag) == -1) {
+				uniqueTagsArray.push(tag);
+			}
+		});
+	});
+
+    // The map() method creates a new array with the results 
+    // of calling a provided function on every element in this array.
+	var tagOjects = uniqueTagsArray.map(function (tag) {
+		// Find all the to-do objects that contain the tag
+		var toDosWithTag = [];
+		toDoObjects.forEach(function (toDo) {
+			// check to make sure the result of indexOf is not -1
+			if (toDo.tags.indexOf(tag) !== -1) {
+				toDosWithTag.push(toDo.description);
+			}
+		});
+
+		return { "name" : tag, "toDos" : toDosWithTag };
+	});
+
+	return tagOjects;
+};
