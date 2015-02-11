@@ -11,6 +11,6 @@ http.createServer(app).listen(3000);
 
 // Set up routes
 app.get("/counts.json", function (req, res) {
-	// res.json returns the entire object as JSON file
+	// res.json returns the entire object as JSON file	
 	res.json(tweetCounts);
 });
