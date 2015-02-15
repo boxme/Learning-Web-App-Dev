@@ -70,10 +70,17 @@ var main = function (toDoObjectss) {
 
 					if (newToDo !== "" && tags !== "") {
 						var tagsArray = tags.split(",");
-						toDoObjectss.push({ "description" : newToDo, "tags" : tagsArray });
+						var newToDoJSON = {"description" : newToDo, "tags" : tagsArray};
 
-						// Update toDos
-						toDos = createToDoListFromObjects(toDoObjectss);
+						// Do a quick post to our todos route
+						$.post("/todos", newToDoJSON, function (response) {
+							// this callback is called with the server responds
+							console.log(response);
+
+							toDoObjectss.push(newToDoJSON);
+							// Update toDos
+							toDos = createToDoListFromObjects(toDoObjectss);
+						});
 
 						$input.val("");
 						$tagInput.val("");
@@ -98,7 +105,6 @@ var main = function (toDoObjectss) {
 
 $(document).ready(function () {
 	$.getJSON("/todos.json", function (toDoObjects) {
-		console.log(JSON.stringify(toDoObjects));
 		main(toDoObjects);
 	});
 });
