@@ -1,6 +1,7 @@
 var express = require("express"),
 	http = require("http"),
 	tweetCounts = require("./tweet_counter.js"),
+	counts = tweetCounts(["awesome", "world"]);
 	app = express();
 
 // Configure the app to use the client directory for static file
@@ -12,5 +13,5 @@ http.createServer(app).listen(3000);
 // Set up routes
 app.get("/counts.json", function (req, res) {
 	// res.json returns the entire object as JSON file	
-	res.json(tweetCounts);
+	res.json(counts);
 });
