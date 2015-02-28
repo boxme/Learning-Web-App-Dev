@@ -1,0 +1,126 @@
+body {
+	background: #f9e933;
+	font-family: 'Droid Sans', sans-serif;
+}
+
+header, main, footer {
+	min-width: 855px;
+}
+
+header .container, main .container, footer .container {
+	max-width: 855px;
+	margin: auto;
+}
+
+header {
+	padding: 25px 0 25px 0;
+	background: white;
+	overflow: auto;
+	border-bottom: 1px solid #ddd;
+}
+
+header nav {
+	float: right;
+	width: 285px;
+}
+
+/* Main Logo */
+h1 {
+	font-family: 'Ubuntu', sans-serif;
+	font-style: italic;
+	font-size: 3em;
+	color: #b33;
+	float: left;
+	width: 570px;
+}
+
+a {
+	color: #f00;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+main {
+	background: #fff;
+	border-radius: 0 5px 5px 5px; /*add rounded borders*/
+	padding: 40px;
+}
+
+main .tabs a span {
+	display: inline-block;
+	border-radius: 5px 5px 0 0;
+	width: 100px;
+	margin-right: 10px;
+	text-align: center;
+	background: #ddd;
+	padding: 5px;
+}
+
+/* Makes the active tab has the same color as the content background */
+main .tabs a span.active {
+	background: #eee;
+}
+
+main .content {
+	padding: 30px 10px 30px 10px;
+	border-radius: 0 5px 5px 5px;
+	background: #eee;
+}
+
+main .content li {
+	border-radius: 5px;
+	padding: 3px;
+	background: #eff;
+	margin: 0 0 10px 0;
+}
+
+main .content h3 {
+	border-radius: 5px;
+	padding: 5px;
+	background: #ddd;
+	margin: 0 0 10px 0;
+}
+
+/* Footer headings */
+h5 {
+	font-family: 'Ubuntu', sans-serif;
+	font-size: 1.25em;
+	margin-bottom: 20px;
+}
+
+footer {
+	border-top: 1px solid #ddd;
+	padding: 40px 0 20px 0;
+}
+
+footer .contact {
+	float: left;
+	width: 570px;
+}
+
+/* for every <p> element that is the second child of its parent */
+footer .contact p:nth-child(2) {
+	color: #b33;
+	font-style: italic;
+}
+
+footer .sitemap {
+	float: right;
+	width: 285px;
+}
+
+footer ul {
+	width: 230px;
+}
+
+li {
+	list-style: none;
+}
+
+footer .sitemap .left {
+	float: left;
+}
+
+footer .sitemap .right {
+	float: right;
+}
