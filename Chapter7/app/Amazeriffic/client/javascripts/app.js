@@ -1,101 +1,34 @@
-var main = function (toDoObjectss) {
+// Global variables
+var toDos,
+	toDoObjectss,
+	tabs = [];
+
+var main = function () {
 	"use strict";
 
-	var toDos = createToDoListFromObjects(toDoObjectss);
+	toDos = createToDoListFromObjects(toDoObjectss);
+	tabs = createTabsClass();
 
-	// jQuery allows us to select a set of elements and then iterate over it as an array
-	$(".tabs a span").toArray().forEach(function (element) {
-		// Create a click handler for this element
-		$(element).on("click", function () {
-			// since we're using the jQuery version of element,
-			// we'll go ahead and create a temporary variable
-			// so we don't need to keep recreating it
-			var $element = $(element);
+	tabs.forEach(function (tab) {
+		var $aElement = $("<a>").attr("href", ""),
+			$spanElement = $("<span>").text(tab.name);
+
+		$aElement.append($spanElement);
+		$(".tabs").append($aElement);
+
+		$spanElement.on("click", function () {
 			var $content;
 
 			// make all the tabs inactive
 			$(".tabs span").removeClass("active");
-
-			$element.addClass("active");
-
+			$spanElement.addClass("active");
+			
 			// empty the main content so we can recreate it
 			$("main .content").empty();
 
-			if ($element.parent().is(":nth-child(1)")) {
-				// Newest
-				$content = $("<ul>");
-
-				toDos.forEach(function (todo) {
-                	$content.prepend($("<li>").text(todo));
-            	});
-
-			} else if ($element.parent().is(":nth-child(2)")) {				
-				// Oldest
-				$content = $("<ul>");
-
-				toDos.forEach(function (todo) {
-                	$content.append($("<li>").text(todo));
-            	});
-
-			} else if ($element.parent().is(":nth-child(3)")) {
-				// Tags
-				var organizedByTag = organizedByTagBookSoln(toDoObjectss);
-
-				organizedByTag.forEach(function (tag) {
-					var $tagName = $("<h3>").text(tag.name);
-					var $content = $("<ul>");
-
-					tag.toDos.forEach(function (desciption) {
-						var $li = $("<li>").text(desciption);
-						$content.append($li);
-					});
-
-					$("main .content").append($tagName);
-					$("main .content").append($content);
-				});
-
-			} else if ($element.parent().is(":nth-child(4)")) {
-				// Add
-				var $inputLabel = $("<p>").text("Description: ");
-				var $input = $("<input>").addClass("description");
-
-				var $tagLabel = $("<p>").text("Tags: ");
-				var $tagInput = $("<input>").addClass("tags");
-
-				var $button = $("<button>").text("+");
-
-				$button.on("click", function () {
-					var newToDo = $input.val();
-					var tags = $tagInput.val();
-
-					if (newToDo !== "" && tags !== "") {
-						var tagsArray = tags.split(",");
-						var newToDoJSON = {"description" : newToDo, "tags" : tagsArray};
-
-						// Do a quick post to our todos route
-						$.post("/todos", newToDoJSON, function (response) {
-							// this callback is called with the server responds
-							console.log(response);
-
-							toDoObjectss.push(newToDoJSON);
-							// Update toDos
-							toDos = createToDoListFromObjects(toDoObjectss);
-						});
-
-						$input.val("");
-						$tagInput.val("");
-					}
-				});
-
-				$content = $("<div>").append($inputLabel)
-				.append($input).append($tagLabel).append($tagInput).append($button);
-				/* Alternatively append() allows multiple arguments so the above
-                can be done with $content = $("<div>").append($input, $button); */
-			}
-
+			$content = tab.content();
 			$("main .content").append($content);
 
-			// return false so the browser don't follow the link
 			return false;
 		});
 	});
@@ -105,9 +38,101 @@ var main = function (toDoObjectss) {
 
 $(document).ready(function () {
 	$.getJSON("/todos.json", function (toDoObjects) {
-		main(toDoObjects);
+		toDoObjectss = toDoObjects;
+		main();
 	});
 });
+
+var createTabsClass = function () {
+	// Add the 'Newest' tab
+	tabs.push({
+		"name": "Newest",
+		"content": function() {
+			var $content = $("<ul>");
+			toDos.forEach(function (todo) {
+               	$content.prepend($("<li>").text(todo));
+           	});
+			return $content;
+		}
+	});
+
+	// Add the 'Oldest' tab
+	tabs.push({
+		"name": "Oldest",
+		"content": function () {
+			var $content = $("<ul>");
+			toDos.forEach(function (todo) {
+       	     	$content.append($("<li>").text(todo));
+           	});
+			return $content;
+		}
+	});
+
+	// Add the 'Tags' tab
+	tabs.push({
+		"name": "Tags",
+		"content": function () {
+			var organizedByTag = organizedByTagBookSoln(toDoObjectss);
+			var $content = $("<ul>");
+
+			organizedByTag.forEach(function (tag) {
+				var $tagName = $("<h3>").text(tag.name);
+				var $toDoDescription = $("<ul>");
+
+				tag.toDos.forEach(function (desciption) {
+						var $li = $("<li>").text(desciption);
+						$toDoDescription.append($li);
+					});
+
+					$content.append($tagName);
+					$content.append($toDoDescription);
+				});
+			return $content;
+		}
+	});
+
+	// Add the 'Add' tab
+	tabs.push({
+		"name": "Add",
+		"content": function () {
+			var $inputLabel = $("<p>").text("Description: ");
+			var $input = $("<input>").addClass("description");
+
+			var $tagLabel = $("<p>").text("Tags: ");
+			var $tagInput = $("<input>").addClass("tags");
+			var $button = $("<button>").text("+");
+
+			$button.on("click", function () {
+				var newToDo = $input.val();
+				var tags = $tagInput.val();
+
+				if (newToDo !== "" && tags !== "") {
+					var tagsArray = tags.split(",");
+					var newToDoJSON = {"description" : newToDo, "tags" : tagsArray};
+
+					// Do a quick post to our todos route
+					$.post("/todos", newToDoJSON, function (response) {
+						// this callback is called with the server responds
+						console.log(response);
+
+						toDoObjectss.push(newToDoJSON);
+						// Update toDos
+						toDos = createToDoListFromObjects(toDoObjectss);
+					});
+
+					$input.val("");
+					$tagInput.val("");
+				}
+			});
+
+			$content = $("<div>").append($inputLabel)
+			.append($input).append($tagLabel).append($tagInput).append($button);
+			
+			return $content;
+		}
+	});
+	return tabs;
+};
 
 var createToDoListFromObjects = function (toDoObjectss) {
 	return toDoObjectss.map(function (task) {
