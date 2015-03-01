@@ -6,7 +6,7 @@ var toDos,
 var main = function () {
 	"use strict";
 
-	toDos = createToDoListFromObjects(toDoObjectss);
+	updateToDos();
 	tabs = createTabsClass();
 
 	tabs.forEach(function (tab) {
@@ -17,8 +17,6 @@ var main = function () {
 		$(".tabs").append($aElement);
 
 		$spanElement.on("click", function () {
-			var $content;
-
 			// make all the tabs inactive
 			$(".tabs span").removeClass("active");
 			$spanElement.addClass("active");
@@ -26,9 +24,9 @@ var main = function () {
 			// empty the main content so we can recreate it
 			$("main .content").empty();
 
-			$content = tab.content();
-			$("main .content").append($content);
-
+			tab.content(function ($content) {
+				$("main .content").append($content);
+			});
 			return false;
 		});
 	});
@@ -43,92 +41,115 @@ $(document).ready(function () {
 	});
 });
 
+var updateToDos = function () {
+	toDos = createToDoListFromObjects(toDoObjectss);
+};
+
 var createTabsClass = function () {
 	// Add the 'Newest' tab
 	tabs.push({
 		"name": "Newest",
-		"content": function() {
-			var $content = $("<ul>");
-			toDos.forEach(function (todo) {
-               	$content.prepend($("<li>").text(todo));
-           	});
-			return $content;
+		"content": function(callback) {
+			$.getJSON("/todos.json", function (toDoObjects) {
+				toDoObjectss = toDoObjects;
+				updateToDos();
+
+				var $content = $("<ul>");
+				toDos.forEach(function (todo) {
+               		$content.prepend($("<li>").text(todo));
+           		});
+           		callback($content);
+			});
 		}
 	});
 
 	// Add the 'Oldest' tab
 	tabs.push({
 		"name": "Oldest",
-		"content": function () {
-			var $content = $("<ul>");
-			toDos.forEach(function (todo) {
-       	     	$content.append($("<li>").text(todo));
-           	});
-			return $content;
+		"content": function (callback) {
+			$.getJSON("/todos.json", function (toDoObjects) {
+				toDoObjectss = toDoObjects;
+				updateToDos();
+
+				var $content = $("<ul>");
+				toDos.forEach(function (todo) {
+       	     		$content.append($("<li>").text(todo));
+           		});
+           		callback($content);
+			});
 		}
 	});
 
 	// Add the 'Tags' tab
 	tabs.push({
 		"name": "Tags",
-		"content": function () {
-			var organizedByTag = organizedByTagBookSoln(toDoObjectss);
-			var $content = $("<ul>");
+		"content": function (callback) {
+			$.getJSON("/todos.json", function (toDoObjects) {
+				toDoObjectss = toDoObjects;
+				updateToDos();
 
-			organizedByTag.forEach(function (tag) {
-				var $tagName = $("<h3>").text(tag.name);
-				var $toDoDescription = $("<ul>");
+				var organizedByTag = organizedByTagBookSoln(toDoObjectss);
+				var $content = $("<ul>");
 
-				tag.toDos.forEach(function (desciption) {
+				organizedByTag.forEach(function (tag) {
+					var $tagName = $("<h3>").text(tag.name);
+					var $toDoDescription = $("<ul>");
+
+					tag.toDos.forEach(function (desciption) {
 						var $li = $("<li>").text(desciption);
 						$toDoDescription.append($li);
 					});
 
 					$content.append($tagName);
 					$content.append($toDoDescription);
+					callback($content);
 				});
-			return $content;
+			});
 		}
 	});
 
 	// Add the 'Add' tab
 	tabs.push({
 		"name": "Add",
-		"content": function () {
-			var $inputLabel = $("<p>").text("Description: ");
-			var $input = $("<input>").addClass("description");
+		"content": function (callback) {
+			$.getJSON("/todos.json", function (toDoObjects) {
+				toDoObjectss = toDoObjects;
+				updateToDos();
 
-			var $tagLabel = $("<p>").text("Tags: ");
-			var $tagInput = $("<input>").addClass("tags");
-			var $button = $("<button>").text("+");
+				var $inputLabel = $("<p>").text("Description: ");
+				var $input = $("<input>").addClass("description");
 
-			$button.on("click", function () {
-				var newToDo = $input.val();
-				var tags = $tagInput.val();
+				var $tagLabel = $("<p>").text("Tags: ");
+				var $tagInput = $("<input>").addClass("tags");
+				var $button = $("<button>").text("+");
 
-				if (newToDo !== "" && tags !== "") {
-					var tagsArray = tags.split(",");
-					var newToDoJSON = {"description" : newToDo, "tags" : tagsArray};
+				$button.on("click", function () {
+					var newToDo = $input.val();
+					var tags = $tagInput.val();
 
-					// Do a quick post to our todos route
-					$.post("/todos", newToDoJSON, function (response) {
-						// this callback is called with the server responds
-						console.log(response);
+					if (newToDo !== "" && tags !== "") {
+						var tagsArray = tags.split(",");
+						var newToDoJSON = {"description" : newToDo, "tags" : tagsArray};
 
-						toDoObjectss.push(newToDoJSON);
-						// Update toDos
-						toDos = createToDoListFromObjects(toDoObjectss);
-					});
+						// Do a quick post to our todos route
+						$.post("/todos", newToDoJSON, function (response) {
+							// this callback is called with the server responds
+							console.log(response);
 
-					$input.val("");
-					$tagInput.val("");
-				}
+							toDoObjectss.push(newToDoJSON);
+							// Update toDos
+							toDos = createToDoListFromObjects(toDoObjectss);
+						});
+
+						$input.val("");
+						$tagInput.val("");
+					}
+				});
+
+				$content = $("<div>").append($inputLabel)
+				.append($input).append($tagLabel).append($tagInput).append($button);
+           		callback($content);
 			});
-
-			$content = $("<div>").append($inputLabel)
-			.append($input).append($tagLabel).append($tagInput).append($button);
-			
-			return $content;
 		}
 	});
 	return tabs;
