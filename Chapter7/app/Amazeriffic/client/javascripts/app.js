@@ -24,8 +24,13 @@ var main = function () {
 			// empty the main content so we can recreate it
 			$("main .content").empty();
 
-			tab.content(function ($content) {
-				$("main .content").append($content);
+			tab.content(function (error, $content) {
+				if (error !== null) {
+					console.log(error);
+					alert();
+				} else {
+					$("main .content").append($content);
+				}
 			});
 			return false;
 		});
@@ -58,7 +63,12 @@ var createTabsClass = function () {
 				toDos.forEach(function (todo) {
                		$content.prepend($("<li>").text(todo));
            		});
-           		callback($content);
+
+           		callback(null, $content);
+			}).fail(function (jqXHR, textStatus, error) {
+				// jqXHR is a superset of the browser's native XMLHttpRequest object
+				// Send the error along with null for the $content
+				callback(error, null);
 			});
 		}
 	});
@@ -75,7 +85,9 @@ var createTabsClass = function () {
 				toDos.forEach(function (todo) {
        	     		$content.append($("<li>").text(todo));
            		});
-           		callback($content);
+           		callback(null, $content);
+			}).fail(function (jqXHR, textStatus, error) {
+				callback(error, null);
 			});
 		}
 	});
@@ -102,8 +114,10 @@ var createTabsClass = function () {
 
 					$content.append($tagName);
 					$content.append($toDoDescription);
-					callback($content);
+					callback(null, $content);
 				});
+			}).fail(function (jqXHR, textStatus, error) {
+				callback(error, null);
 			});
 		}
 	});
@@ -148,7 +162,7 @@ var createTabsClass = function () {
 				.append($tagInput)
 				.append($button);
 
-           	callback($content);
+           	callback(null, $content);
 		}
 	});
 	return tabs;
