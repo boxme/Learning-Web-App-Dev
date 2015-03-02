@@ -112,44 +112,43 @@ var createTabsClass = function () {
 	tabs.push({
 		"name": "Add",
 		"content": function (callback) {
-			$.getJSON("/todos.json", function (toDoObjects) {
-				toDoObjectss = toDoObjects;
-				updateToDos();
+			var $inputLabel = $("<p>").text("Description: ");
+			var $input = $("<input>").addClass("description");
 
-				var $inputLabel = $("<p>").text("Description: ");
-				var $input = $("<input>").addClass("description");
+			var $tagLabel = $("<p>").text("Tags: ");
+			var $tagInput = $("<input>").addClass("tags");
+			var $button = $("<button>").text("+");
 
-				var $tagLabel = $("<p>").text("Tags: ");
-				var $tagInput = $("<input>").addClass("tags");
-				var $button = $("<button>").text("+");
+			$button.on("click", function () {
+				var newToDo = $input.val();
+				var tags = $tagInput.val();
 
-				$button.on("click", function () {
-					var newToDo = $input.val();
-					var tags = $tagInput.val();
+				if (newToDo !== "" && tags !== "") {
+					var tagsArray = tags.split(",");
+					var newToDoJSON = {"description" : newToDo, "tags" : tagsArray};
 
-					if (newToDo !== "" && tags !== "") {
-						var tagsArray = tags.split(",");
-						var newToDoJSON = {"description" : newToDo, "tags" : tagsArray};
+					// Do a quick post to our todos route
+					$.post("/todos", newToDoJSON, function (response) {
+						// this callback is called with the server responds
+						console.log(response);
 
-						// Do a quick post to our todos route
-						$.post("/todos", newToDoJSON, function (response) {
-							// this callback is called with the server responds
-							console.log(response);
+						// Go to the 'Newest' tab
+						$(".tabs a:first-child span").trigger("click");
+					});
 
-							toDoObjectss.push(newToDoJSON);
-							// Update toDos
-							toDos = createToDoListFromObjects(toDoObjectss);
-						});
-
-						$input.val("");
-						$tagInput.val("");
-					}
-				});
-
-				$content = $("<div>").append($inputLabel)
-				.append($input).append($tagLabel).append($tagInput).append($button);
-           		callback($content);
+					$input.val("");
+					$tagInput.val("");
+				}
 			});
+
+			$content = $("<div>")
+				.append($inputLabel)
+				.append($input)
+				.append($tagLabel)
+				.append($tagInput)
+				.append($button);
+
+           	callback($content);
 		}
 	});
 	return tabs;

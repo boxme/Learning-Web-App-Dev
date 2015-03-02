@@ -43,16 +43,7 @@ app.post("/todos", function (req, res) {
 			console.log(err);
 			res.send("Error");
 		} else {
-			// Our client expects all of the todo items to be returned,
-			// so we do an additional request to maintain compatibility
-			ToDo.find({}, function (err, result) {
-				if (err !== null) {
-					// The element didnt get saved
-					res.send("Error");
-				} else {
-					res.json(result);
-				}
-			});
+			res.json(result);
 		}
 	});
 });
