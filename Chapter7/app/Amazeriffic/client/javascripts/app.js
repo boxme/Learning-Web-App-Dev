@@ -27,7 +27,7 @@ var main = function () {
 			tab.content(function (error, $content) {
 				if (error !== null) {
 					console.log(error);
-					alert();
+					alert("Error retrieving data: " + error);
 				} else {
 					$("main .content").append($content);
 				}

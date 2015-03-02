@@ -2,20 +2,13 @@ var express = require("express"),
 	http = require("http"),
 	bodyParser = require("body-parser"),
 	mongoose = require("mongoose"),
+	ToDo = require("./models/todo.js"),
 	app = express();
 
 app.use(express.static(__dirname + "/client"));
 
 // Connect to the amazeriffic data store in mongo
 mongoose.connect("mongodb://localhost/amazeriffic");
-
-// This is our mongoose model for todos
-var ToDoSchema = mongoose.Schema({
-	description: String,
-	tags: [String]
-});
-
-var ToDo = mongoose.model("ToDo", ToDoSchema);
 
 // Tell Express to parse incoming JSON object
 app.use(bodyParser.json());
