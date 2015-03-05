@@ -19,9 +19,27 @@ ToDosController.create = function (req, res) {
 		if (err !== null) {
 			// The element did not get saved
 			console.log(err);
-			res.json(500, err);
+			res.status(500).json(err);
 		} else {
-			res.json(200, result);
+			res.status(200).json(result);
+		}
+	});
+};
+
+ToDosController.show = function (req, res) {
+	// This is the id that gets sent to the url
+	var id = req.params.id;
+
+	// find the ToDo item with the associated id
+	ToDo.find({"_id":id}, function (err, toDos) {
+		if (err !== null) {
+			res.status(500).json(err);
+		} else {
+			if (toDos.length > 0) {
+				res.status(200).json(toDos[0]);
+			} else {
+				res.status(404).send({});
+			}
 		}
 	});
 };

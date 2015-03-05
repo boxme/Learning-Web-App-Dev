@@ -21,4 +21,6 @@ http.createServer(app).listen(3000);
 // todos.json file in example from Chapter 5
 app.get("/todos.json", ToDosController.index);
 
+app.get("/todos/:id", ToDosController.show);
+
 app.post("/todos", ToDosController.create);
