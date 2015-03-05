@@ -47,7 +47,7 @@ UsersController.update = function (req, res) {
 };
 
 // Delete an existing user
-UsersController.delete = function (req, res) {
+UsersController.destroy = function (req, res) {
 	console.log("delete action called");
 	res.send(200);
 };
