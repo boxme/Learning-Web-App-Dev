@@ -1,13 +1,35 @@
 var ToDo = require("../models/todo.js"),
-	ToDosController = {};
+	ToDosController = {},
+	User = require("../models/user.js");
 
 ToDosController.index = function (req, res) {
-	ToDo.find({}, function (err, toDos) {
-		if (err !== null) {
-			return;
-		}
-		res.json(toDos);
-	});
+	var username = req.params.username || null;
+	var respondWithToDos;
+
+	// Helper function that gets ToDos based on a query
+	respondWithToDos = function (query) {
+		ToDo.find(query, function (err, toDos) {
+			if (err !== null) {
+				res.status(500).json(err);
+			} else {
+				res.status(200).json(toDos);
+			}
+		});
+	};
+
+	if (username !== null) {
+		User.find({"username": username}, function (err, result) {
+			if (err !== null) {
+				res.status(500).json(err);
+			} else if (result.length === 0) {
+				res.send(404);
+			} else {
+				respondWithToDos({"owner": result[0].id});
+			}
+		});
+	} else {
+		respondWithToDos({});
+	}
 };
 
 ToDosController.create = function (req, res) {
@@ -42,6 +64,16 @@ ToDosController.show = function (req, res) {
 			}
 		}
 	});
+};
+
+ToDosController.update = function (req, res) {
+	console.log("todos update action called");
+	res.send(200);
+};
+
+ToDosController.destroy = function (req, res) {
+console.log("todos destroy action called");
+	res.send(200);
 };
 
 module.exports = ToDosController;

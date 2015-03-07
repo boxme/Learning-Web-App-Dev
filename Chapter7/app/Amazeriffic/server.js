@@ -25,6 +25,12 @@ app.get("/todos.json", ToDosController.index);
 app.get("/todos/:id", ToDosController.show);
 app.post("/todos", ToDosController.create);
 
+// Todos related to the user
+app.get("/users/:username/todos.json", ToDosController.index);
+app.post("/users/:username/todos", ToDosController.create);
+app.put("/users/:username/todos/:id", ToDosController.update);
+app.del("/users/:username/todos/:id", ToDosController.destroy);
+
 // These routes are for Users
 app.get("/users.json", UsersController.index);
 app.post("/users", UsersController.create);
