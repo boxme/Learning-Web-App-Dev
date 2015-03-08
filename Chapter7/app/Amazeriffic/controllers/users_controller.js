@@ -10,7 +10,7 @@ UsersController.index = function (req, res) {
 UsersController.show = function (req, res) {
 	console.log("show action called");
 	var userName = req.params.username;
-	checkForUserExistence(userName, function (err, userExists) {
+	UsersController.checkForUserExistence(userName, function (err, userExists, result) {
 		if (err !== null) {
 			console.log(err);
 			res.send(500, err);
@@ -65,15 +65,14 @@ UsersController.destroy = function (req, res) {
 	res.send(200);
 };
 
-var checkForUserExistence = function (username, callback) {
+UsersController.checkForUserExistence = function (username, callback) {
 	User.find({"username": username}, function (err, result) {
 		if (err !== null) {
-			callback(err, false);
+			callback(err, null, null);
 		} else if (result.length === 0) {
-			return callback(err, false);
+			return callback(err, false, null);
 		} else {
-			// Already exists
-			return callback(err, true);
+			return callback(err, true, result);
 		}
 	});
 };

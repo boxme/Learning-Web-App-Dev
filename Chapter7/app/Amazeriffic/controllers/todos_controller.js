@@ -1,50 +1,64 @@
 var ToDo = require("../models/todo.js"),
 	ToDosController = {},
+	UsersController = require("./users_controller.js"),
 	User = require("../models/user.js");
+
+ToDosController.respondWithToDos = function (query, callback) {
+	ToDo.find(query, function (err, toDos) {
+		callback(err, toDos);
+	});
+};
 
 ToDosController.index = function (req, res) {
 	var username = req.params.username || null;
 	var respondWithToDos;
 
-	// Helper function that gets ToDos based on a query
-	respondWithToDos = function (query) {
-		ToDo.find(query, function (err, toDos) {
-			if (err !== null) {
-				res.status(500).json(err);
-			} else {
-				res.status(200).json(toDos);
-			}
-		});
-	};
-
-	if (username !== null) {
-		User.find({"username": username}, function (err, result) {
-			if (err !== null) {
-				res.status(500).json(err);
-			} else if (result.length === 0) {
-				res.send(404);
-			} else {
-				respondWithToDos({"owner": result[0].id});
-			}
-		});
-	} else {
-		respondWithToDos({});
-	}
-};
-
-ToDosController.create = function (req, res) {
-	var newToDo = new ToDo({"description": req.body.description,
-							"tags": req.body.tags});
-	newToDo.save(function (err, result) {
-		console.log(result);
-
+	respondWithToDosResult = function (err, result) {
 		if (err !== null) {
-			// The element did not get saved
-			console.log(err);
 			res.status(500).json(err);
 		} else {
 			res.status(200).json(result);
 		}
+	};
+
+	if (username !== null) {
+		UsersController.checkForUserExistence(username, function (err, isUserFound, result) {
+			if (err !== null) {
+				res.status(500).json(err);
+			} else if (!isUserFound) {
+				res.send(404);
+			} else {
+				ToDosController.respondWithToDos({"owner": result[0]._id}, respondWithToDosResult);
+			}
+		});
+	} else {
+		ToDosController.respondWithToDos({}, respondWithToDosResult);
+	}
+};
+
+ToDosController.create = function (req, res) {
+	var username = req.params.username || null;
+	var newToDo = new ToDo({"description": req.body.description,
+							"tags": req.body.tags});
+
+	UsersController.checkForUserExistence(username, function (err, isUserFound, result) {
+		if (err !== null) {
+			res.status(500).json(err);
+			return;
+		} else if (!isUserFound) {
+			newToDo.owner = null;
+		} else {
+			newToDo.owner = result[0]._id;
+		}
+
+		newToDo.save(function (err, savedResult) {
+			console.log(savedResult);
+			if (err !== null) {
+				res.status(500).json(err);
+			} else {
+				res.status(200).json(savedResult);
+			}
+		});
 	});
 };
 
@@ -56,12 +70,20 @@ ToDosController.show = function (req, res) {
 	ToDo.find({"_id":id}, function (err, toDos) {
 		if (err !== null) {
 			res.status(500).json(err);
+		} else if (toDos.length > 0) {
+			res.status(200).json(toDos[0]);
 		} else {
-			if (toDos.length > 0) {
-				res.status(200).json(toDos[0]);
-			} else {
-				res.status(404).send({});
-			}
+			res.status(404).send({});
+		}
+	});
+
+	respondWithToDos({"_id": id}, function (err, toDos) {
+		if (err !== null) {
+			res.status(500).json(err);
+		} else if (toDos.length > 0) {
+			res.status(200).json(toDos[0]);
+		} else {
+			res.status(404).send({});
 		}
 	});
 };
