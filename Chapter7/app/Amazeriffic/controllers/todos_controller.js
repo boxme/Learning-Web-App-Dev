@@ -11,7 +11,6 @@ ToDosController.respondWithToDos = function (query, callback) {
 
 ToDosController.index = function (req, res) {
 	var username = req.params.username || null;
-	var respondWithToDos;
 
 	respondWithToDosResult = function (err, result) {
 		if (err !== null) {
@@ -67,17 +66,7 @@ ToDosController.show = function (req, res) {
 	var id = req.params.id;
 
 	// find the ToDo item with the associated id
-	ToDo.find({"_id":id}, function (err, toDos) {
-		if (err !== null) {
-			res.status(500).json(err);
-		} else if (toDos.length > 0) {
-			res.status(200).json(toDos[0]);
-		} else {
-			res.status(404).send({});
-		}
-	});
-
-	respondWithToDos({"_id": id}, function (err, toDos) {
+	ToDosController.respondWithToDos({"_id": id}, function (err, toDos) {
 		if (err !== null) {
 			res.status(500).json(err);
 		} else if (toDos.length > 0) {
@@ -90,12 +79,12 @@ ToDosController.show = function (req, res) {
 
 ToDosController.update = function (req, res) {
 	console.log("todos update action called");
-	res.send(200);
+	res.sendStatus(200);
 };
 
 ToDosController.destroy = function (req, res) {
 console.log("todos destroy action called");
-	res.send(200);
+	res.sendStatus(200);
 };
 
 module.exports = ToDosController;

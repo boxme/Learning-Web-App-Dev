@@ -1,6 +1,6 @@
 // Global variables
-var toDos,
-	toDoObjectss,
+var listOfToDoDesc,
+	listOfToDoObjects,
 	tabs = [];
 
 var main = function () {
@@ -41,13 +41,13 @@ var main = function () {
 
 $(document).ready(function () {
 	$.getJSON("/todos.json", function (toDoObjects) {
-		toDoObjectss = toDoObjects;
+		listOfToDoObjects = toDoObjects;
 		main();
 	});
 });
 
 var updateToDos = function () {
-	toDos = createToDoListFromObjects(toDoObjectss);
+	listOfToDoDesc = createToDoListFromObjects(listOfToDoObjects);
 };
 
 var createTabsClass = function () {
@@ -56,12 +56,31 @@ var createTabsClass = function () {
 		"name": "Newest",
 		"content": function(callback) {
 			$.getJSON("/todos.json", function (toDoObjects) {
-				toDoObjectss = toDoObjects;
+				listOfToDoObjects = toDoObjects;
 				updateToDos();
 
 				var $content = $("<ul>");
-				toDos.forEach(function (todo) {
-               		$content.prepend($("<li>").text(todo));
+
+           		listOfToDoObjects.forEach(function (toDoObject) {
+           			var $todoListItem = $("<li>"),
+						$todoRemoveLink = $("<a>");
+
+           			$todoListItem.text(toDoObject.description);
+           			$todoRemoveLink.attr("href", "todos/" + toDoObject._id).text("remove");
+           			$todoRemoveLink.on("click", function () {
+           				var urlString = $(this).attr("href");
+           				$.ajax({
+           					url: urlString,
+           					type: "DELETE",
+           				}).done(function () {
+           					// Upon a successful removal, remove this item from the DOM
+           				}).fail(function (jqXHR, textStatus, error) {
+
+           				});
+           				return false;
+           			});
+           			$todoListItem.append($todoRemoveLink);
+           			$content.prepend($todoListItem);
            		});
 
            		callback(null, $content);
@@ -78,12 +97,12 @@ var createTabsClass = function () {
 		"name": "Oldest",
 		"content": function (callback) {
 			$.getJSON("/todos.json", function (toDoObjects) {
-				toDoObjectss = toDoObjects;
+				listOfToDoObjects = toDoObjects;
 				updateToDos();
 
 				var $content = $("<ul>");
-				toDos.forEach(function (todo) {
-       	     		$content.append($("<li>").text(todo));
+				listOfToDoDesc.forEach(function (description) {
+       	     		$content.append($("<li>").text(description));
            		});
            		callback(null, $content);
 			}).fail(function (jqXHR, textStatus, error) {
@@ -97,10 +116,10 @@ var createTabsClass = function () {
 		"name": "Tags",
 		"content": function (callback) {
 			$.getJSON("/todos.json", function (toDoObjects) {
-				toDoObjectss = toDoObjects;
+				listOfToDoObjects = toDoObjects;
 				updateToDos();
 
-				var organizedByTag = organizedByTagBookSoln(toDoObjectss);
+				var organizedByTag = organizedByTagBookSoln(listOfToDoObjects);
 				var $content = $("<ul>");
 
 				organizedByTag.forEach(function (tag) {
@@ -174,7 +193,7 @@ var createToDoListFromObjects = function (toDoObjectss) {
 	});
 };
 
-var organizedTaskByTagMySoln = function (toDoObjects) {
+var organizedByTagMySoln = function (toDoObjects) {
 	var tagsArray = [];
 	var descriptionToTagsArray = [];
 	toDoObjects.forEach(function (toDo) {

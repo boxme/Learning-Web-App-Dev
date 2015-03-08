@@ -24,6 +24,7 @@ http.createServer(app).listen(3000);
 app.get("/todos.json", ToDosController.index);
 app.get("/todos/:id", ToDosController.show);
 app.post("/todos", ToDosController.create);
+app.del("/todos/:id", ToDosController.destroy);
 
 // Todos related to the user
 app.get("/users/:username/todos.json", ToDosController.index);
