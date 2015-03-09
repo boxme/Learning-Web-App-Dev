@@ -81,6 +81,11 @@ main .content h3 {
 	margin: 0 0 10px 0;
 }
 
+main .content a.remove {
+	float: right;
+	font-size: 0.85em;
+}
+
 /* Footer headings */
 h5 {
 	font-family: 'Ubuntu', sans-serif;

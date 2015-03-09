@@ -83,8 +83,16 @@ ToDosController.update = function (req, res) {
 };
 
 ToDosController.destroy = function (req, res) {
-console.log("todos destroy action called");
-	res.sendStatus(200);
+	var id = req.params.id;
+
+	ToDo.remove({"_id": id}, function (err) {
+		if (err !== null) {
+			console.log(id + " delete failed");
+			res.status(500).json(err);
+		} else {
+			res.sendStatus(200);
+		}
+	});
 };
 
 module.exports = ToDosController;

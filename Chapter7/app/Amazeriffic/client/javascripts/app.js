@@ -66,6 +66,7 @@ var createTabsClass = function () {
 						$todoRemoveLink = $("<a>");
 
            			$todoListItem.text(toDoObject.description);
+           			$todoRemoveLink.addClass("remove");
            			$todoRemoveLink.attr("href", "todos/" + toDoObject._id).text("remove");
            			$todoRemoveLink.on("click", function () {
            				var urlString = $(this).attr("href");
@@ -74,6 +75,8 @@ var createTabsClass = function () {
            					type: "DELETE",
            				}).done(function () {
            					// Upon a successful removal, remove this item from the DOM
+           					// Go to the 'Newest' tab
+           					$(".tabs a:first-child span").trigger("click");
            				}).fail(function (jqXHR, textStatus, error) {
 
            				});
