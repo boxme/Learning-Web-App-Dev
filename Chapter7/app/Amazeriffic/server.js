@@ -8,7 +8,8 @@ var express = require("express"),
 	UsersController = require("./controllers/users_controller.js"),
 	app = express();
 
-app.use(express.static(__dirname + "/client"));
+//__dirname : It will resolve to your project folder.
+app.use(express.static(__dirname + "/client", {index: "index.html"}));
 
 // Connect to the amazeriffic data store in mongo
 mongoose.connect("mongodb://localhost/amazeriffic");
